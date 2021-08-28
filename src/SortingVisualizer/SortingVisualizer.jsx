@@ -1,12 +1,13 @@
 import './SortingVisualizer.css';
-import React from 'react';
-import {Component} from 'react';
+import React, {Component} from 'react';
 import {mergeSortAnimation} from "../SortingAlgorithm/mergeSort";
+import {bubbleSortAnimation} from "../SortingAlgorithm/bubbleSort";
 
 const MIN_VAL = 5;
 const MAX_VAL = 500;
 const ACTION_COLOR = 'red';
 const DEFAULT_COLOR = 'slateblue';
+
 
 export class SortingVisualizer extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ export class SortingVisualizer extends Component {
         this.state = {
             array: [],
             arraySize: 65,
+            isRunning: false,
         };
 
     }
@@ -23,6 +25,7 @@ export class SortingVisualizer extends Component {
     }
 
     setArray = () => {
+
         console.log('setArray');
         let array = [];
         const {arraySize} = this.state;
@@ -35,6 +38,9 @@ export class SortingVisualizer extends Component {
     };
 
     mergeSort() {
+        this.setState({isRunning: !this.state.isRunning}, () => {
+            console.log(this.state.isRunning);
+        });
         const {array} = this.state;
         const animation = mergeSortAnimation(array);
         console.log('animation.length', animation.length);
@@ -58,7 +64,66 @@ export class SortingVisualizer extends Component {
                 barIdxStyle.height = `${newHeight}px`;
             }, (i + 2) * 10);
         }
+        this.isSorted(animation.length);
     }
+
+    isSorted(timing) {
+        setTimeout(() => {
+            console.log('now');
+            this.setState({isRunning: !this.state.isRunning}, () => {
+                console.log(this.state.isRunning);
+            });
+        }, timing * 10);
+    }
+
+    async bubbleSort() {
+        this.setState({isRunning: !this.state.isRunning}, () => {
+            console.log(this.state.isRunning);
+        });
+        const {array} = this.state;
+        const animation = bubbleSortAnimation(array);
+        const obj = document.getElementsByClassName('array-bar');
+        for (let i = 0; i < animation.length; i = i + 3) {
+            if (animation[i]) {
+                // console.log('animation[i]:',animation[i]);
+                // console.log(animation[i]);
+                const [firstIdx, secondIdx] = animation[i];
+                const firstObjStyle = obj[firstIdx].style;
+                const secondObjStyle = obj[secondIdx].style;
+                setTimeout(() => {
+                    firstObjStyle.backgroundColor = ACTION_COLOR;
+                    secondObjStyle.backgroundColor = ACTION_COLOR;
+                }, i * 10);
+                setTimeout(() => {
+                    firstObjStyle.backgroundColor = DEFAULT_COLOR;
+                    secondObjStyle.backgroundColor = DEFAULT_COLOR;
+                }, (i + 1) * 10);
+                if (!animation[i + 2].includes('none')) {
+                    setTimeout(() => {
+                        const [barIdx1, barIdx2] = animation[i + 2];
+                        const barIdx1Style = obj[barIdx1].style;
+                        const barIdx2Style = obj[barIdx2].style;
+                        const height1 = barIdx1Style.height;
+                        barIdx1Style.height = barIdx2Style.height;
+                        barIdx2Style.height = height1;
+                    }, (i + 2) * 10);
+                }
+            }
+        }
+        this.isSorted(animation.length);
+    }
+
+    // updateIsRunning = async () => {
+    //     this.setState({isRunning: true}, () => {
+    //         console.log(this.state.isRunning);
+    //     });
+    //
+    //     const promise= this.bubbleSort();
+    //
+    //     promise.then(()=>this.setState({isRunning: false}, () => {
+    //         console.log(this.state.isRunning);
+    //     }));
+    // };
 
     handleChange = e => {
         // this.setState({arraySize: e.target.value * 5},()=>{
@@ -70,8 +135,7 @@ export class SortingVisualizer extends Component {
 
 
     render() {
-        const {array} = this.state;
-
+        const {array, isRunning} = this.state;
         return (
             <div className="main-container">
                 <div className="array-container">
@@ -90,19 +154,28 @@ export class SortingVisualizer extends Component {
                 </div>
                 <div className="controls-container">
                     <input
+                        ref="refer"
+                        disabled={isRunning ? 'disabled' : null}
                         id="size-bar"
                         type="range"
                         min="1"
                         max="25"
-                        defaultValue={this.state.arraySize/5}
+                        defaultValue={this.state.arraySize / 5}
                         style={{background: 'blue'}}
                         onChange={this.handleChange}
                     />
-                    <button onClick={() => this.setArray()}>Generate New Array</button>
+                    <button onClick={() => {
+                        this.setArray();
+                        this.setState({isRunning: false}, () => {
+                            console.log(this.state.isRunning);
+                        });
+                    }} disabled={isRunning ? 'disabled' : null}
+                    >Generate New Array
+                    </button>
                     <button onClick={() => this.mergeSort()}>Merge Sort</button>
-                    <button onClick={() => this.setArray()}>Quick Sort</button>
-                    <button onClick={() => this.setArray()}>Heap Sort</button>
-                    <button onClick={() => this.setArray()}>Bubble Sort</button>
+                    {/*<button onClick={() => this.setArray()}>Quick Sort</button>*/}
+                    {/*<button onClick={() => this.setArray()}>Heap Sort</button>*/}
+                    <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
                 </div>
             </div>
         );
@@ -119,4 +192,7 @@ function sortedArrCheck(JSsortedArr, mySortedArr) {
 
 }
 
+
 export default SortingVisualizer;
+
+
