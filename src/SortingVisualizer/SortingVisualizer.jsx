@@ -71,33 +71,33 @@ export class SortingVisualizer extends Component {
         const {array} = this.state;
         const animation = bubbleSortAnimation(array);
         const obj = document.getElementsByClassName('array-bar');
-        // for (let i = 0; i < animation.length; i = i + 3) {
-        //     if (animation[i]) {
-        //         // console.log('animation[i]:',animation[i]);
-        //         // console.log(animation[i]);
-        //         const [firstIdx, secondIdx] = animation[i];
-        //         const firstObjStyle = obj[firstIdx].style;
-        //         const secondObjStyle = obj[secondIdx].style;
-        //         setTimeout(() => {
-        //             firstObjStyle.backgroundColor = ACTION_COLOR;
-        //             secondObjStyle.backgroundColor = ACTION_COLOR;
-        //         }, i * 10);
-        //         setTimeout(() => {
-        //             firstObjStyle.backgroundColor = DEFAULT_COLOR;
-        //             secondObjStyle.backgroundColor = DEFAULT_COLOR;
-        //         }, (i + 1) * 10);
-        //         if (!animation[i + 2].includes('none')) {
-        //             setTimeout(() => {
-        //                 const [barIdx1, barIdx2] = animation[i + 2];
-        //                 const barIdx1Style = obj[barIdx1].style;
-        //                 const barIdx2Style = obj[barIdx2].style;
-        //                 const height1 = barIdx1Style.height;
-        //                 barIdx1Style.height = barIdx2Style.height;
-        //                 barIdx2Style.height = height1;
-        //             }, (i + 2) * 10);
-        //         }
-        //     }
-        // }
+        for (let i = 0; i < animation.length; i = i + 3) {
+            if (animation[i]) {
+                // console.log('animation[i]:',animation[i]);
+                // console.log(animation[i]);
+                const [firstIdx, secondIdx] = animation[i];
+                const firstObjStyle = obj[firstIdx].style;
+                const secondObjStyle = obj[secondIdx].style;
+                setTimeout(() => {
+                    firstObjStyle.backgroundColor = ACTION_COLOR;
+                    secondObjStyle.backgroundColor = ACTION_COLOR;
+                }, i * 10);
+                setTimeout(() => {
+                    firstObjStyle.backgroundColor = DEFAULT_COLOR;
+                    secondObjStyle.backgroundColor = DEFAULT_COLOR;
+                }, (i + 1) * 10);
+                if (!animation[i + 2].includes('none')) {
+                    setTimeout(() => {
+                        const [barIdx1, barIdx2] = animation[i + 2];
+                        const barIdx1Style = obj[barIdx1].style;
+                        const barIdx2Style = obj[barIdx2].style;
+                        const height1 = barIdx1Style.height;
+                        barIdx1Style.height = barIdx2Style.height;
+                        barIdx2Style.height = height1;
+                    }, (i + 2) * 10);
+                }
+            }
+        }
         this.isSorted(animation.length);
     }
 
