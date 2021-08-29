@@ -3,9 +3,8 @@ export function mergeSortAnimation(arr) {
     if (length <= 1) return arr;
     const animation = [];
     const dupArr = arr.slice();
-    console.log('arr:',arr);
-    mergeSortHelper(arr, dupArr, animation, 0, length - 1);
-    console.log('arr:',arr);
+    mergeSortHelper(arr.slice(), dupArr, animation, 0, length - 1);
+    // console.log('arr:',arr);
     return animation;
 }
 
